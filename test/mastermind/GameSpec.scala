@@ -16,7 +16,7 @@ class GameSpec extends FlatSpec with Matchers with Inside with MockFactory {
     val gameUuid = game.start(() => secretCode, numberOfAttempts)
 
     (decodingBoards.add _).verify(where { (decodingBoard: DecodingBoard) =>
-      decodingBoard.gameUuid == gameUuid && decodingBoard.secretCode == secretCode && decodingBoard.numberOfAttempts == numberOfAttempts
+      decodingBoard.gameUuid == gameUuid && decodingBoard.numberOfAttempts == numberOfAttempts
     }) once
   }
 }
