@@ -8,8 +8,8 @@ import org.junit.runner.RunWith
 @CucumberOptions(
   features = Array("classpath:features"),
   glue = Array("classpath:steps"),
-  tags = Array("~@wip"),
-  monochrome = true,
+  tags = Array("@wip"),
+  monochrome = false,
   plugin = Array("pretty",
     "html:target/cucumber",
     "json:target/cucumber/test-report.json",
