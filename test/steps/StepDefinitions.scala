@@ -3,13 +3,16 @@ package steps
 import cucumber.api.PendingException
 import cucumber.api.scala.{EN, ScalaDsl}
 import mastermind._
+import collection.mutable.Map
 
 class StepDefinitions extends ScalaDsl with EN {
   var numberOfAttempts: Int = 0
   var game: Game = new Game(new DecodingBoards {
-    override def load(gameUuid: GameUuid) = ???
+    private val boards = Map.empty[GameUuid, DecodingBoard]
 
-    override def add(decodingBoard: DecodingBoard) = ???
+    override def load(gameUuid: GameUuid) = boards.getOrElse(gameUuid, {throw new Exception(s"Unexpected game uuid: `$gameUuid`.")})
+
+    override def add(decodingBoard: DecodingBoard) = boards(decodingBoard.gameUuid) = decodingBoard
   })
   var gameUuid: GameUuid = null
 
