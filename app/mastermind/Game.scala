@@ -1,8 +1,10 @@
 package mastermind
 
-class Game {
+class Game(val decodingBoards: DecodingBoards) {
   def start(codeMaker: CodeMaker, numberOfAttempts: Int): GameUuid = {
-    GameUuid()
+    val board = new DecodingBoard(GameUuid(), codeMaker(), numberOfAttempts)
+    decodingBoards.add(board)
+    board.gameUuid
   }
 
   def tryCode(gameUuid: GameUuid, code: Code) = {
@@ -10,6 +12,6 @@ class Game {
   }
 
   def load(gameUuid: GameUuid): DecodingBoard = {
-    new DecodingBoard
+    new DecodingBoard(GameUuid(), Code("Red"), 12)
   }
 }

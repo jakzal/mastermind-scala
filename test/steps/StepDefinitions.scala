@@ -2,11 +2,15 @@ package steps
 
 import cucumber.api.PendingException
 import cucumber.api.scala.{EN, ScalaDsl}
-import mastermind.{Code, Game, GameUuid}
+import mastermind._
 
 class StepDefinitions extends ScalaDsl with EN {
   var numberOfAttempts: Int = 0
-  var game: Game = new Game()
+  var game: Game = new Game(new DecodingBoards {
+    override def load(gameUuid: GameUuid) = ???
+
+    override def add(decodingBoard: DecodingBoard) = ???
+  })
   var gameUuid: GameUuid = null
 
   Given("""^a decoding board of (\d+) attempts$""") { (attempts: Int) =>

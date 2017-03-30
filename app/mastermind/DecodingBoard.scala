@@ -1,5 +1,4 @@
 package mastermind
 
-class DecodingBoard {
-
+class DecodingBoard(val gameUuid: GameUuid, val secretCode: Code, val numberOfAttempts: Int) {
 }
