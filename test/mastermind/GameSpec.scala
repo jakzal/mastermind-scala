@@ -19,4 +19,15 @@ class GameSpec extends FlatSpec with Matchers with Inside with MockFactory {
       decodingBoard.gameUuid == gameUuid && decodingBoard.numberOfAttempts == numberOfAttempts
     }) once
   }
+
+  "load" should "load an existing game board" in {
+    val gameUuid = GameUuid()
+    val decodingBoard = stub[DecodingBoard]
+    val decodingBoards = stub[DecodingBoards]
+    (decodingBoards.load _).when(gameUuid).returns(decodingBoard)
+
+    val game = new Game(decodingBoards)
+
+    game.load(gameUuid) should be (decodingBoard)
+  }
 }

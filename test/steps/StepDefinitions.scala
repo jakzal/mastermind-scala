@@ -3,6 +3,8 @@ package steps
 import cucumber.api.PendingException
 import cucumber.api.scala.{EN, ScalaDsl}
 import mastermind._
+import mastermind.exceptions.DecodingBoardNotFoundException
+
 import collection.mutable.Map
 
 class StepDefinitions extends ScalaDsl with EN {
@@ -10,7 +12,9 @@ class StepDefinitions extends ScalaDsl with EN {
   var game: Game = new Game(new DecodingBoards {
     private val boards = Map.empty[GameUuid, DecodingBoard]
 
-    override def load(gameUuid: GameUuid) = boards.getOrElse(gameUuid, {throw new Exception(s"Unexpected game uuid: `$gameUuid`.")})
+    override def load(gameUuid: GameUuid) = boards.getOrElse(gameUuid, {
+      throw new DecodingBoardNotFoundException(gameUuid)
+    })
 
     override def add(decodingBoard: DecodingBoard) = boards(decodingBoard.gameUuid) = decodingBoard
   })

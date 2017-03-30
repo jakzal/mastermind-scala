@@ -12,6 +12,6 @@ class Game(val decodingBoards: DecodingBoards) {
   }
 
   def load(gameUuid: GameUuid): DecodingBoard = {
-    new DecodingBoard(GameUuid(), Code("Red"), 12)
+    decodingBoards.load(gameUuid)
   }
 }
