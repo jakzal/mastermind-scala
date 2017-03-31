@@ -29,6 +29,9 @@ Feature: Playing mastermind
       | Green Red Blue Yellow | Red Green Yellow Blue       | O O O O  |
       | Green Red Blue Yellow | Green Red Yellow Blue       | X X O O  |
       | Red Green Red Yellow  | Red Red Purple Purple       | X O      |
+      | Red Red Red Yellow    | Red Green Purple Purple     | X        |
+      | Red Red Blue Yellow   | Purple Purple Red Purple    | O        |
+      | Red Blue Blue Yellow  | Purple Purple Red Red       | O        |
 
   Scenario: Winning a game
     Given the code maker placed the "Red Green Blue Yellow" pattern on the board
