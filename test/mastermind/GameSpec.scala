@@ -30,4 +30,17 @@ class GameSpec extends FlatSpec with Matchers with MockFactory {
 
     game.load(gameUuid) should be (decodingBoard)
   }
+
+  "tryCode" should "attempt to make a guess" in {
+    val gameUuid = GameUuid()
+    val decodingBoard = stub[DecodingBoard]
+    val decodingBoards = stub[DecodingBoards]
+    val code = Code("Red")
+    (decodingBoards.load _).when(gameUuid).returns(decodingBoard)
+
+    val game = new Game(decodingBoards)
+    game.tryCode(gameUuid, code)
+
+    (decodingBoard.tryCode _).verify(code)
+  }
 }

@@ -4,10 +4,11 @@ import cucumber.api.PendingException
 import cucumber.api.scala.{EN, ScalaDsl}
 import mastermind._
 import mastermind.exceptions.DecodingBoardNotFoundException
+import org.scalatest.Matchers
 
 import collection.mutable.Map
 
-class StepDefinitions extends ScalaDsl with EN {
+class StepDefinitions extends ScalaDsl with EN with Matchers {
   var numberOfAttempts: Int = 0
   var game: Game = new Game(new DecodingBoards {
     private val boards = Map.empty[GameUuid, DecodingBoard]
@@ -35,9 +36,8 @@ class StepDefinitions extends ScalaDsl with EN {
   Then("""^the code maker should give me "([^"]*)" feedback on my guess$""") { (feedback: String) =>
     val board = game.load(gameUuid)
 
-//    board.lastGuess().exactHits() should be (feedback.count(_ == 'X'))
-//    board.lastGuess().colourHits() should be (feedback.count(_ == 'O'))
-    throw new PendingException()
+    board.lastGuess().exactHits() should be(feedback.count(_ == 'X'))
+    board.lastGuess().colourHits() should be(feedback.count(_ == 'O'))
   }
 
   When("""^I try to break the code with an invalid pattern (\d+) times$""") { (arg0: Int) =>

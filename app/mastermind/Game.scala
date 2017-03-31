@@ -8,7 +8,7 @@ class Game(val decodingBoards: DecodingBoards) {
   }
 
   def tryCode(gameUuid: GameUuid, code: Code) = {
-
+    load(gameUuid).tryCode(code)
   }
 
   def load(gameUuid: GameUuid): DecodingBoard = {

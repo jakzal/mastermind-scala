@@ -21,7 +21,7 @@ class DecodingBoardSpec extends FlatSpec with Matchers {
     val board = new DecodingBoard(GameUuid(), Code("Red Green Blue Yellow"), 6)
 
     board.tryCode(Code("Blue Red Green Green"))
-    val guess = board.tryCode(Code("Red Red Blue Blue"))
+    val guess = board.tryCode(Code("Blue Red Green Green"))
 
     board.lastGuess() should be(guess)
   }
