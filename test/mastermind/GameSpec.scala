@@ -3,10 +3,10 @@ package mastermind
 import org.junit.runner.RunWith
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{FlatSpec, Inside, Matchers}
+import org.scalatest.{FlatSpec, Matchers}
 
 @RunWith(classOf[JUnitRunner])
-class GameSpec extends FlatSpec with Matchers with Inside with MockFactory {
+class GameSpec extends FlatSpec with Matchers with MockFactory {
   "start" should "store a new board" in {
     val decodingBoards = stub[DecodingBoards]
     val game = new Game(decodingBoards)
