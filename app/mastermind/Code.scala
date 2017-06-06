@@ -8,7 +8,7 @@ object Code {
 
 class Code(val pegs: List[CodePeg.Value]) {
   def colourHits(code: Code): Int = {
-    def removeExactHits(pegs: List[CodePeg.Value]): (List[CodePeg.Value], List[CodePeg.Value]) = {
+    def diff(code: Code): (List[CodePeg.Value], List[CodePeg.Value]) = {
       pegs.zip(code.pegs).filter(pegTuple => pegTuple._1 != pegTuple._2).unzip
     }
 
@@ -20,13 +20,17 @@ class Code(val pegs: List[CodePeg.Value]) {
       left.foldLeft(0)((hits, pegCount) => hits + math.min(pegCount._2, right.getOrElse(pegCount._1, 0)))
     }
 
-    val filteredPegs = removeExactHits(pegs)
+    val filteredPegs = diff(code)
 
     calculateHits(countColours(filteredPegs._1), countColours(filteredPegs._2))
   }
 
   def exactHits(code: Code): Int = {
-    pegs.zip(code.pegs).filter(pegTuple => pegTuple._1 == pegTuple._2).length
+    exactHitPegs(code).length
+  }
+
+  private def exactHitPegs(code: Code): List[CodePeg.Value] = {
+    pegs.zip(code.pegs).filter(pegTuple => pegTuple._1 == pegTuple._2).map(_._1)
   }
 
   override def toString: String = "Code(" + pegs.foldLeft("")((s, peg) => s + peg + ", ").dropRight(2).trim + ")"
