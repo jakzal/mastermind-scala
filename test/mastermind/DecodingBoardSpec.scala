@@ -25,4 +25,20 @@ class DecodingBoardSpec extends FlatSpec with Matchers {
 
     board.lastGuess() should be(guess)
   }
+
+  "isGameWon" should "return true if the last guess was correct" in {
+    val board = new DecodingBoard(GameUuid(), Code("Red Green Blue Yellow"), 6)
+
+    board.tryCode(Code("Red Green Blue Yellow"))
+
+    board.isGameWon() should be(true)
+  }
+
+  "isGameWon" should "return false if the last guess was incorrect" in {
+    val board = new DecodingBoard(GameUuid(), Code("Red Green Blue Yellow"), 6)
+
+    board.tryCode(Code("Red Red Red Red"))
+
+    board.isGameWon() should be(false)
+  }
 }

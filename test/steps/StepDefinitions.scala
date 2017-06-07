@@ -10,6 +10,7 @@ import collection.mutable.Map
 
 class StepDefinitions extends ScalaDsl with EN with Matchers {
   var numberOfAttempts: Int = 0
+  var secretCode: Code = null
   var game: Game = new Game(new DecodingBoards {
     private val boards = Map.empty[GameUuid, DecodingBoard]
 
@@ -26,7 +27,8 @@ class StepDefinitions extends ScalaDsl with EN with Matchers {
   }
 
   Given("""^the code maker placed the "([^"]*)" pattern on the board$""") { (codePattern: String) =>
-    gameUuid = game.start(() => Code(codePattern), numberOfAttempts)
+    secretCode = Code(codePattern)
+    gameUuid = game.start(() => secretCode, numberOfAttempts)
   }
 
   When("""^I try to break the code with "([^"]*)"$""") { (codePattern: String) =>
@@ -46,13 +48,11 @@ class StepDefinitions extends ScalaDsl with EN with Matchers {
   }
 
   When("""^I break the code in the final guess$""") { () =>
-    //// Write code here that turns the phrase above into concrete actions
-    throw new PendingException()
+    game.tryCode(gameUuid, secretCode)
   }
 
   Then("""^I should win the game$""") { () =>
-    //// Write code here that turns the phrase above into concrete actions
-    throw new PendingException()
+    game.load(gameUuid).isGameWon() should be (true)
   }
 
   Then("""^I should loose the game$""") { () =>
