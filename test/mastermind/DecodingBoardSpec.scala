@@ -1,5 +1,6 @@
 package mastermind
 
+import mastermind.exceptions.NoAttemptsLeftException
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{FlatSpec, Matchers}
@@ -42,6 +43,12 @@ class DecodingBoardSpec extends FlatSpec with Matchers {
     board.isGameWon() should be(false)
   }
 
+  "isGameWon" should "return false if there is not guesses yet" in {
+    val board = new DecodingBoard(GameUuid(), Code("Red Green Blue Yellow"), 6)
+
+    board.isGameWon() should be(false)
+  }
+
   "isGameLost" should "return false if there are any attempts left" in {
     val board = new DecodingBoard(GameUuid(), Code("Red Green Blue Yellow"), 2)
 
@@ -66,5 +73,26 @@ class DecodingBoardSpec extends FlatSpec with Matchers {
     board.tryCode(Code("Red Green Blue Yellow"))
 
     board.isGameLost() should be(false)
+  }
+
+  "tryCode" should "throw an exception if the game is won" in {
+    val board = new DecodingBoard(GameUuid(), Code("Red Green Blue Yellow"), 2)
+
+    board.tryCode(Code("Red Green Blue Yellow"))
+
+    assertThrows[NoAttemptsLeftException] {
+      board.tryCode(Code("Red Green Blue Yellow"))
+    }
+  }
+
+  "tryCode" should "throw an exception if the game is lost" in {
+    val board = new DecodingBoard(GameUuid(), Code("Red Green Blue Yellow"), 2)
+
+    board.tryCode(Code("Red Red Red Red"))
+    board.tryCode(Code("Green Green Green Green"))
+
+    assertThrows[NoAttemptsLeftException] {
+      board.tryCode(Code("Red Green Blue Yellow"))
+    }
   }
 }
