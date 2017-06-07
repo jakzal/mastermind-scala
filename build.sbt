@@ -19,3 +19,8 @@ libraryDependencies += "org.scalamock" %% "scalamock-scalatest-support" % "3.5.0
 
 // Adds additional packages into conf/routes
 // play.sbt.routes.RoutesKeys.routesImport += "pl.zalas.binders._"
+
+coverageMinimum := 97
+coverageFailOnMinimum := true
+coverageHighlighting := true
+coverageExcludedPackages := "<empty>;Reverse.*;router\\.*"
