@@ -8,7 +8,7 @@ import org.junit.runner.RunWith
 @CucumberOptions(
   features = Array("classpath:features"),
   glue = Array("classpath:steps"),
-  tags = Array("@wip"),
+  tags = Array(),
   monochrome = false,
   plugin = Array("pretty",
     "html:target/cucumber",
