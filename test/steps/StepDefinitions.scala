@@ -1,12 +1,11 @@
 package steps
 
-import cucumber.api.PendingException
 import cucumber.api.scala.{EN, ScalaDsl}
 import mastermind._
 import mastermind.exceptions.DecodingBoardNotFoundException
 import org.scalatest.Matchers
 
-import collection.mutable.Map
+import scala.collection.mutable.Map
 
 class StepDefinitions extends ScalaDsl with EN with Matchers {
   var numberOfAttempts: Int = 0
@@ -51,10 +50,10 @@ class StepDefinitions extends ScalaDsl with EN with Matchers {
   }
 
   Then("""^I should win the game$""") { () =>
-    game.load(gameUuid).isGameWon() should be (true)
+    game.load(gameUuid).isGameWon() should be(true)
   }
 
   Then("""^I should loose the game$""") { () =>
-    game.load(gameUuid).isGameLost() should be (true)
+    game.load(gameUuid).isGameLost() should be(true)
   }
 }

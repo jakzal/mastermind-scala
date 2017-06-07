@@ -28,7 +28,7 @@ class GameSpec extends FlatSpec with Matchers with MockFactory {
 
     val game = new Game(decodingBoards)
 
-    game.load(gameUuid) should be (decodingBoard)
+    game.load(gameUuid) should be(decodingBoard)
   }
 
   "tryCode" should "attempt to make a guess" in {

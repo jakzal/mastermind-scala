@@ -1,9 +1,9 @@
 package mastermind
 
 object Code {
-  def apply(pins: String*): Code = new Code(pins.toList.map(CodePeg.withName(_)))
-
   def apply(pins: String): Code = Code(pins.split(" "): _*)
+
+  def apply(pins: String*): Code = new Code(pins.toList.map(CodePeg.withName(_)))
 }
 
 case class Code(val pegs: List[CodePeg.Value]) {

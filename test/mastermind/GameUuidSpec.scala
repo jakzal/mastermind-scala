@@ -3,8 +3,8 @@ package mastermind
 import java.util.UUID
 
 import org.junit.runner.RunWith
-import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.junit.JUnitRunner
+import org.scalatest.{FlatSpec, Matchers}
 
 @RunWith(classOf[JUnitRunner])
 class GameUuidSpec extends FlatSpec with Matchers {

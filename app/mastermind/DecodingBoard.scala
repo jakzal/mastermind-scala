@@ -12,11 +12,11 @@ class DecodingBoard(val gameUuid: GameUuid, private val secretCode: Code, val nu
     guesses.last
   }
 
-  def lastGuess(): Guess = guesses.last
-
-  def isGameWon(): Boolean = if (guesses.nonEmpty) guesses.last.isCodeBroken else false
+  private def isGameFinished(): Boolean = isGameWon || isGameLost
 
   def isGameLost(): Boolean = guesses.length == numberOfAttempts && !isGameWon
 
-  private def isGameFinished(): Boolean = isGameWon || isGameLost
+  def isGameWon(): Boolean = if (guesses.nonEmpty) guesses.last.isCodeBroken else false
+
+  def lastGuess(): Guess = guesses.last
 }

@@ -1,10 +1,10 @@
 package mastermind
 
 import org.junit.runner.RunWith
-import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.prop.TableDrivenPropertyChecks.forAll
 import org.scalatest.prop.Tables.Table
+import org.scalatest.{FlatSpec, Matchers}
 
 @RunWith(classOf[JUnitRunner])
 class CodeSpec extends FlatSpec with Matchers {
@@ -37,7 +37,7 @@ class CodeSpec extends FlatSpec with Matchers {
 
       code.exactHits(anotherCode) should be(exactHits)
     }
-    }
+  }
 
   val colourHitsExamples = Table(
     ("codeString", "anotherCodeString", "colourHits"),
@@ -66,7 +66,7 @@ class CodeSpec extends FlatSpec with Matchers {
   "toString" should "return colour names" in {
     val code = Code("Red Green Blue")
 
-    code.toString should be ("Code(Red, Green, Blue)")
+    code.toString should be("Code(Red, Green, Blue)")
   }
 
   "equals" should "compare objects by value" in {
@@ -74,7 +74,7 @@ class CodeSpec extends FlatSpec with Matchers {
     val secondCode = Code("Red Green Blue")
     val thirdCode = Code("Blue Green Red")
 
-    firstCode.equals(secondCode) should be (true)
-    firstCode.equals(thirdCode) should be (false)
+    firstCode.equals(secondCode) should be(true)
+    firstCode.equals(thirdCode) should be(false)
   }
 }
