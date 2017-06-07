@@ -13,8 +13,8 @@ class DecodingBoardSpec extends FlatSpec with Matchers {
     val board = new DecodingBoard(gameUuid, secretCode, numberOfAttempts)
     val guess = board.tryCode(Code("Blue Red Green Green"))
 
-    guess.secretCode should have('pegs (Code("Red Green Blue Yellow").pegs))
-    guess.guessCode should have('pegs (Code("Blue Red Green Green").pegs))
+    guess.secretCode should be(Code("Red Green Blue Yellow"))
+    guess.guessCode should be(Code("Blue Red Green Green"))
   }
 
   "lastGuess" should "return the most recent guess" in {
