@@ -42,9 +42,8 @@ class StepDefinitions extends ScalaDsl with EN with Matchers {
     board.lastGuess().colourHits() should be(feedback.count(_ == 'O'))
   }
 
-  When("""^I try to break the code with an invalid pattern (\d+) times$""") { (arg0: Int) =>
-    //// Write code here that turns the phrase above into concrete actions
-    throw new PendingException()
+  When("""^I try to break the code with an invalid pattern (\d+) times$""") { (times: Int) =>
+    for (i <- 1 to times) game.tryCode(gameUuid, Code("Purple Purple Purple Purple"))
   }
 
   When("""^I break the code in the final guess$""") { () =>
@@ -56,7 +55,6 @@ class StepDefinitions extends ScalaDsl with EN with Matchers {
   }
 
   Then("""^I should loose the game$""") { () =>
-    //// Write code here that turns the phrase above into concrete actions
-    throw new PendingException()
+    game.load(gameUuid).isGameLost() should be (true)
   }
 }

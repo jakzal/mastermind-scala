@@ -11,4 +11,6 @@ class DecodingBoard(val gameUuid: GameUuid, private val secretCode: Code, val nu
   def lastGuess(): Guess = guesses.last
 
   def isGameWon(): Boolean = lastGuess.isCodeBroken
+
+  def isGameLost(): Boolean = guesses.length == numberOfAttempts && !isGameWon
 }

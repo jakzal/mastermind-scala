@@ -41,4 +41,30 @@ class DecodingBoardSpec extends FlatSpec with Matchers {
 
     board.isGameWon() should be(false)
   }
+
+  "isGameLost" should "return false if there are any attempts left" in {
+    val board = new DecodingBoard(GameUuid(), Code("Red Green Blue Yellow"), 2)
+
+    board.tryCode(Code("Red Red Red Red"))
+
+    board.isGameLost() should be(false)
+  }
+
+  "isGameLost" should "return true if there is no attempts left and code was not broken" in {
+    val board = new DecodingBoard(GameUuid(), Code("Red Green Blue Yellow"), 2)
+
+    board.tryCode(Code("Red Red Red Red"))
+    board.tryCode(Code("Green Green Green Green"))
+
+    board.isGameLost() should be(true)
+  }
+
+  "isGameLost" should "return false if there is no attempts left but the code was broken" in {
+    val board = new DecodingBoard(GameUuid(), Code("Red Green Blue Yellow"), 2)
+
+    board.tryCode(Code("Red Red Red Red"))
+    board.tryCode(Code("Red Green Blue Yellow"))
+
+    board.isGameLost() should be(false)
+  }
 }
