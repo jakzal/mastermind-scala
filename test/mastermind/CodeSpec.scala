@@ -9,7 +9,7 @@ import org.scalatest.prop.Tables.Table
 @RunWith(classOf[JUnitRunner])
 class CodeSpec extends FlatSpec with Matchers {
   "Code" should "be created from a list of colour strings" in {
-    val code = Code("Red Green Blue Yellow".split(" ").toList)
+    val code = Code("Red", "Green", "Blue", "Yellow")
 
     code.pegs should be(List(CodePeg.Red, CodePeg.Green, CodePeg.Blue, CodePeg.Yellow))
   }
@@ -63,9 +63,18 @@ class CodeSpec extends FlatSpec with Matchers {
     }
   }
 
-  "toString" should "Return colour names" in {
+  "toString" should "return colour names" in {
     val code = Code("Red Green Blue")
 
     code.toString should be ("Code(Red, Green, Blue)")
+  }
+
+  "equals" should "compare objects by value" in {
+    val firstCode = Code("Red Green Blue")
+    val secondCode = Code("Red Green Blue")
+    val thirdCode = Code("Blue Green Red")
+
+    firstCode.equals(secondCode) should be (true)
+    firstCode.equals(thirdCode) should be (false)
   }
 }

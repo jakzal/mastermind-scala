@@ -1,12 +1,12 @@
 package mastermind
 
 object Code {
-  def apply(pins: List[String]): Code = new Code(pins.map(CodePeg.withName(_)))
+  def apply(pins: String*): Code = new Code(pins.toList.map(CodePeg.withName(_)))
 
-  def apply(pins: String): Code = Code(pins.split(" ").toList)
+  def apply(pins: String): Code = Code(pins.split(" "): _*)
 }
 
-class Code(val pegs: List[CodePeg.Value]) {
+case class Code(val pegs: List[CodePeg.Value]) {
   def colourHits(code: Code): Int = {
     def diff(code: Code): (List[CodePeg.Value], List[CodePeg.Value]) = {
       pegs.zip(code.pegs).filter(pegTuple => pegTuple._1 != pegTuple._2).unzip
