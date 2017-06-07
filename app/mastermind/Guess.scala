@@ -5,5 +5,5 @@ class Guess(val secretCode: Code, val guessCode: Code) {
 
   def exactHits(): Int = secretCode.exactHits(guessCode)
 
-  def isCorrect(): Boolean = secretCode == guessCode
+  def isCodeBroken(): Boolean = secretCode == guessCode
 }

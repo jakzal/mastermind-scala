@@ -29,15 +29,15 @@ class GuessSpec extends FlatSpec with Matchers with MockFactory {
     guess.colourHits() should be (3)
   }
 
-  "isCorrect" should "return true if the last guess code matches the secret code" in {
+  "isCodeBroken" should "return true if the last guess code matches the secret code" in {
     val guess = new Guess(Code("Red"), Code("Red"))
 
-    guess.isCorrect() should be (true)
+    guess.isCodeBroken() should be (true)
   }
 
-  "isCorrect" should "return false if the last guess code does not match the secret code" in {
+  "isCodeBroken" should "return false if the last guess code does not match the secret code" in {
     val guess = new Guess(Code("Red"), Code("Blue"))
 
-    guess.isCorrect() should be (false)
+    guess.isCodeBroken() should be (false)
   }
 }
