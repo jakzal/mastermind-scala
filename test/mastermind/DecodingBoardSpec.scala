@@ -105,4 +105,21 @@ class DecodingBoardSpec extends WordSpec with Matchers {
       }
     }
   }
+
+  "guesses" should {
+    "return all the previously made guess attempts" in {
+      val board = new DecodingBoard(GameUuid(), Code("Red Green Blue Yellow"), 2)
+      val firstCode = Code("Red Red Red Red")
+      val secondCode = Code("Red Green Blue Yellow")
+
+      board.tryCode(firstCode)
+      board.tryCode(secondCode)
+
+      val guesses = board.guesses()
+
+      guesses.length should be(2)
+      guesses.head.guessCode should be(firstCode)
+      guesses.last.guessCode should be(secondCode)
+    }
+  }
 }
