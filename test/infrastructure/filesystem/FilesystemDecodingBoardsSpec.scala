@@ -45,6 +45,7 @@ class FilesystemDecodingBoardsSpec extends WordSpec with Matchers with BeforeAnd
       val loadedBoard = decodingBoards.load(board.gameUuid)
 
       loadedBoard should be(board)
+      loadedBoard.guesses().length should be(2)
       loadedBoard.guesses().head.guessCode should be(Code("Red", "Red"))
     }
 
