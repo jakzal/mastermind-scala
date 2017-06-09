@@ -48,5 +48,18 @@ class GameSpec extends WordSpec with Matchers with MockFactory {
 
       (decodingBoard.tryCode _).verify(code)
     }
+
+    "should remember the board with a new guess" in {
+      val gameUuid = GameUuid()
+      val decodingBoard = stub[DecodingBoard]
+      val decodingBoards = stub[DecodingBoards]
+      (decodingBoards.load _).when(gameUuid).returns(decodingBoard)
+
+      val game = new Game(decodingBoards)
+      game.tryCode(gameUuid, Code("Red"))
+      game.tryCode(gameUuid, Code("Green"))
+
+      (decodingBoards.remember _).verify(decodingBoard) twice
+    }
   }
 }
