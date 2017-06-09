@@ -8,6 +8,6 @@ object GameUuid {
   def apply(uuid: String): GameUuid = new GameUuid(UUID.fromString(uuid))
 }
 
-class GameUuid(val uuid: UUID) {
+case class GameUuid(val uuid: UUID) {
   override def toString: String = uuid.toString
 }

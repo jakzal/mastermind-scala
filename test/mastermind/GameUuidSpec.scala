@@ -26,5 +26,9 @@ class GameUuidSpec extends WordSpec with Matchers {
     "be randomly created" in {
       GameUuid().toString should fullyMatch regex """^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"""
     }
+
+    "be consider equal if the string uuid is the same" in {
+      GameUuid("1070460d-60db-4e22-a0df-ce8512a251dd") should be (GameUuid("1070460d-60db-4e22-a0df-ce8512a251dd"))
+    }
   }
 }
