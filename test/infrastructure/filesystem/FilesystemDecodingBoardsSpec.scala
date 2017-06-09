@@ -3,14 +3,14 @@ package infrastructure.filesystem
 import java.io.File
 
 import mastermind.exceptions.DecodingBoardNotFoundException
-import mastermind.{Code, DecodingBoard, GameUuid}
+import mastermind.{DecodingBoards, DecodingBoardsSpec, GameUuid}
 import org.apache.commons.io.FileUtils
 import org.junit.runner.RunWith
+import org.scalatest.BeforeAndAfter
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 
 @RunWith(classOf[JUnitRunner])
-class FilesystemDecodingBoardsSpec extends WordSpec with Matchers with BeforeAndAfter {
+class FilesystemDecodingBoardsSpec extends DecodingBoardsSpec with BeforeAndAfter {
   lazy val dir = {
     val dir = File.createTempFile("FilesystemDecodingBoards", "")
     dir.delete
@@ -22,49 +22,16 @@ class FilesystemDecodingBoardsSpec extends WordSpec with Matchers with BeforeAnd
     dir.delete()
   }
 
-  "FilesystemDecodingBoard" should {
-    val decodingBoards = new FilesystemDecodingBoards(dir)
+  def createDecodingBoards: DecodingBoards = new FilesystemDecodingBoards(dir)
 
-    "load the previously added decoding board" in {
-      val firstBoard = new DecodingBoard(GameUuid(), Code("Red", "Blue"), 6)
-      val secondBoard = new DecodingBoard(GameUuid(), Code("Green", "Yellow"), 9)
-
-      decodingBoards.remember(firstBoard)
-      decodingBoards.remember(secondBoard)
-
-      decodingBoards.load(firstBoard.gameUuid) should be(firstBoard)
-      decodingBoards.load(secondBoard.gameUuid) should be(secondBoard)
-    }
-
-    "load previous guesses" in {
-      val board = new DecodingBoard(GameUuid(), Code("Red", "Blue"), 6)
-      board.tryCode(Code("Red", "Red"))
-      board.tryCode(Code("Red", "Blue"))
-      decodingBoards.remember(board)
-
-      val loadedBoard = decodingBoards.load(board.gameUuid)
-
-      loadedBoard should be(board)
-      loadedBoard.guesses().length should be(2)
-      loadedBoard.guesses().head.guessCode should be(Code("Red", "Red"))
-    }
-
-    "throw an exception if the board does not exist" in {
-      val board = new DecodingBoard(GameUuid(), Code("Red", "Blue"), 6)
-
-      decodingBoards.remember(board)
-
-      assertThrows[DecodingBoardNotFoundException] {
-        decodingBoards.load(GameUuid())
-      }
-    }
+  "FilesystemDecodingBoards" should {
 
     "throw an exception if the game file is malformed" in {
       val gameUuid = GameUuid()
       createMalformGameFile(gameUuid)
 
       assertThrows[DecodingBoardNotFoundException] {
-        decodingBoards.load(gameUuid)
+        createDecodingBoards.load(gameUuid)
       }
     }
 
@@ -73,7 +40,7 @@ class FilesystemDecodingBoardsSpec extends WordSpec with Matchers with BeforeAnd
       createInvalidGameFile(gameUuid)
 
       assertThrows[DecodingBoardNotFoundException] {
-        decodingBoards.load(gameUuid)
+        createDecodingBoards.load(gameUuid)
       }
     }
   }
