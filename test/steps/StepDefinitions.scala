@@ -1,24 +1,14 @@
 package steps
 
 import cucumber.api.scala.{EN, ScalaDsl}
+import infrastructure.test.InMemoryDecodingBoards
 import mastermind._
-import mastermind.exceptions.DecodingBoardNotFoundException
 import org.scalatest.Matchers
 
-import scala.collection.mutable.Map
-
 class StepDefinitions extends ScalaDsl with EN with Matchers {
+  val game: Game = new Game(new InMemoryDecodingBoards())
   var numberOfAttempts: Int = 0
   var secretCode: Code = null
-  var game: Game = new Game(new DecodingBoards {
-    private val boards = Map.empty[GameUuid, DecodingBoard]
-
-    override def load(gameUuid: GameUuid) = boards.getOrElse(gameUuid, {
-      throw new DecodingBoardNotFoundException(gameUuid)
-    })
-
-    override def remember(decodingBoard: DecodingBoard) = boards(decodingBoard.gameUuid) = decodingBoard
-  })
   var gameUuid: GameUuid = null
 
   Given("""^a decoding board of (\d+) attempts$""") { (attempts: Int) =>
