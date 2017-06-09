@@ -2,14 +2,18 @@ package mastermind
 
 import mastermind.exceptions.NoAttemptsLeftException
 
-class DecodingBoard(val gameUuid: GameUuid, private val secretCode: Code, val numberOfAttempts: Int) {
-  private var guesses = Vector.empty[Guess]
+case class DecodingBoard(
+                          val gameUuid: GameUuid,
+                          val secretCode: Code,
+                          val numberOfAttempts: Int,
+                          private var guessAttempts: Vector[Guess] = Vector.empty[Guess]
+                        ) {
 
   def tryCode(code: Code): Guess = {
     if (isGameFinished()) throw new NoAttemptsLeftException(numberOfAttempts)
 
-    guesses = guesses :+ new Guess(secretCode, code)
-    guesses.last
+    guessAttempts = guessAttempts :+ new Guess(secretCode, code)
+    guessAttempts.last
   }
 
   private def isGameFinished(): Boolean = isGameWon || isGameLost
@@ -19,4 +23,6 @@ class DecodingBoard(val gameUuid: GameUuid, private val secretCode: Code, val nu
   def isGameWon(): Boolean = if (guesses.nonEmpty) guesses.last.isCodeBroken else false
 
   def lastGuess(): Guess = guesses.last
+
+  def guesses(): Vector[Guess] = guessAttempts
 }
