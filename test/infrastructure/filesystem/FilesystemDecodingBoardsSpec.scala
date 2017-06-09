@@ -29,8 +29,8 @@ class FilesystemDecodingBoardsSpec extends WordSpec with Matchers with BeforeAnd
       val firstBoard = new DecodingBoard(GameUuid(), Code("Red", "Blue"), 6)
       val secondBoard = new DecodingBoard(GameUuid(), Code("Green", "Yellow"), 9)
 
-      decodingBoards.add(firstBoard)
-      decodingBoards.add(secondBoard)
+      decodingBoards.remember(firstBoard)
+      decodingBoards.remember(secondBoard)
 
       decodingBoards.load(firstBoard.gameUuid) should be(firstBoard)
       decodingBoards.load(secondBoard.gameUuid) should be(secondBoard)
@@ -40,7 +40,7 @@ class FilesystemDecodingBoardsSpec extends WordSpec with Matchers with BeforeAnd
       val board = new DecodingBoard(GameUuid(), Code("Red", "Blue"), 6)
       board.tryCode(Code("Red", "Red"))
       board.tryCode(Code("Red", "Blue"))
-      decodingBoards.add(board)
+      decodingBoards.remember(board)
 
       val loadedBoard = decodingBoards.load(board.gameUuid)
 
@@ -51,7 +51,7 @@ class FilesystemDecodingBoardsSpec extends WordSpec with Matchers with BeforeAnd
     "throw an exception if the board does not exist" in {
       val board = new DecodingBoard(GameUuid(), Code("Red", "Blue"), 6)
 
-      decodingBoards.add(board)
+      decodingBoards.remember(board)
 
       assertThrows[DecodingBoardNotFoundException] {
         decodingBoards.load(GameUuid())

@@ -16,7 +16,7 @@ class GameSpec extends WordSpec with Matchers with MockFactory {
 
       val gameUuid = game.start(() => secretCode, numberOfAttempts)
 
-      (decodingBoards.add _).verify(where { (decodingBoard: DecodingBoard) =>
+      (decodingBoards.remember _).verify(where { (decodingBoard: DecodingBoard) =>
         decodingBoard.gameUuid == gameUuid && decodingBoard.numberOfAttempts == numberOfAttempts
       }) once
     }

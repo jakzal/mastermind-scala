@@ -19,7 +19,7 @@ class FilesystemDecodingBoards (dir: File) extends DecodingBoards {
     }
   }
 
-  override def add(decodingBoard: DecodingBoard) = saveDocument(decodingBoard.gameUuid, serialize(decodingBoard))
+  override def remember(decodingBoard: DecodingBoard) = saveDocument(decodingBoard.gameUuid, serialize(decodingBoard))
 
   private def file(gameUuid: GameUuid): File = new File(dir.getCanonicalPath + "/" + gameUuid + ".json")
 

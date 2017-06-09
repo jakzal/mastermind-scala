@@ -3,7 +3,7 @@ package mastermind
 class Game(val decodingBoards: DecodingBoards) {
   def start(codeMaker: CodeMaker, numberOfAttempts: Int): GameUuid = {
     val board = new DecodingBoard(GameUuid(), codeMaker(), numberOfAttempts)
-    decodingBoards.add(board)
+    decodingBoards.remember(board)
     board.gameUuid
   }
 

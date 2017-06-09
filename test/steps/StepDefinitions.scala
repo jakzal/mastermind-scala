@@ -17,7 +17,7 @@ class StepDefinitions extends ScalaDsl with EN with Matchers {
       throw new DecodingBoardNotFoundException(gameUuid)
     })
 
-    override def add(decodingBoard: DecodingBoard) = boards(decodingBoard.gameUuid) = decodingBoard
+    override def remember(decodingBoard: DecodingBoard) = boards(decodingBoard.gameUuid) = decodingBoard
   })
   var gameUuid: GameUuid = null
 
