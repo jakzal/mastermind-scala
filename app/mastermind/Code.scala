@@ -1,12 +1,21 @@
 package mastermind
 
+import mastermind.exceptions.InvalidCodeLengthException
+
 object Code {
+  val maxLength: Int = 6
+
   def apply(pins: String): Code = Code(pins.split(" "): _*)
 
   def apply(pins: String*): Code = new Code(pins.toList.map(CodePeg.withName(_)))
 }
 
 case class Code(val pegs: List[CodePeg.Value]) {
+
+  if (pegs.isEmpty || pegs.length > Code.maxLength) {
+    throw new InvalidCodeLengthException(pegs.length, Code.maxLength)
+  }
+
   def colourHits(code: Code): Int = {
     def diff(code: Code): (List[CodePeg.Value], List[CodePeg.Value]) = {
       pegs.zip(code.pegs).filter(pegTuple => pegTuple._1 != pegTuple._2).unzip

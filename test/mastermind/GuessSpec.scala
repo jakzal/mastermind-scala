@@ -10,8 +10,8 @@ import org.scalatest.{Matchers, WordSpec}
 class GuessSpec extends WordSpec with Matchers with MockFactory {
   "Guess" should {
     "reject guess code that is shorter than the secret code" in {
-      val secretCode = stub[Code]
-      val guessCode = stub[Code]
+      val secretCode = code
+      val guessCode = code
 
       (secretCode.length _).when() returns 4
       (guessCode.length _).when() returns 3
@@ -22,8 +22,8 @@ class GuessSpec extends WordSpec with Matchers with MockFactory {
     }
 
     "reject guess code that is longer than the secret code" in {
-      val secretCode = stub[Code]
-      val guessCode = stub[Code]
+      val secretCode = code
+      val guessCode = code
 
       (secretCode.length _).when() returns 4
       (guessCode.length _).when() returns 5
@@ -36,8 +36,8 @@ class GuessSpec extends WordSpec with Matchers with MockFactory {
 
   "exactHits" should {
     "return exact hits for secret and guess codes" in {
-      val secretCode = stub[Code]
-      val guessCode = stub[Code]
+      val secretCode = code
+      val guessCode = code
 
       (secretCode.exactHits _).when(guessCode) returns (2)
 
@@ -49,8 +49,8 @@ class GuessSpec extends WordSpec with Matchers with MockFactory {
 
   "colourHits" should {
     "return colour only hits for secret and guess codes" in {
-      val secretCode = stub[Code]
-      val guessCode = stub[Code]
+      val secretCode = code
+      val guessCode = code
 
       (secretCode.colourHits _).when(guessCode) returns (3)
 
@@ -72,5 +72,12 @@ class GuessSpec extends WordSpec with Matchers with MockFactory {
 
       guess.isCodeBroken() should be(false)
     }
+  }
+
+  private def code: Code = {
+    // to prevent the mocking framework from calling Code's constructor with an empty list
+    class CodeStub extends Code(List(CodePeg.Red))
+
+    stub[CodeStub]
   }
 }

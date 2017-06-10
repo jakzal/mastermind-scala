@@ -1,5 +1,6 @@
 package mastermind
 
+import mastermind.exceptions.InvalidCodeLengthException
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.prop.TableDrivenPropertyChecks.forAll
@@ -19,6 +20,18 @@ class CodeSpec extends WordSpec with Matchers {
       val code = Code("Red Green Blue Yellow")
 
       code.pegs should be(List(CodePeg.Red, CodePeg.Green, CodePeg.Blue, CodePeg.Yellow))
+    }
+
+    "not be empty" in {
+      assertThrows[InvalidCodeLengthException] {
+        Code(List())
+      }
+    }
+
+    "have no more than 6 pegs" in {
+      assertThrows[InvalidCodeLengthException] {
+        Code("Red Red Red Green Green Green Blue")
+      }
     }
   }
 
