@@ -87,4 +87,11 @@ class CodeSpec extends WordSpec with Matchers {
       firstCode.equals(thirdCode) should be(false)
     }
   }
+
+  "length" should {
+    "return the number of pegs" in {
+      Code("Red").length should be (1)
+      Code("Red Green Blue").length should be (3)
+    }
+  }
 }

@@ -1,5 +1,6 @@
 package mastermind
 
+import mastermind.exceptions.IncompatibleCodeLengthException
 import org.junit.runner.RunWith
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.junit.JUnitRunner
@@ -7,6 +8,32 @@ import org.scalatest.{Matchers, WordSpec}
 
 @RunWith(classOf[JUnitRunner])
 class GuessSpec extends WordSpec with Matchers with MockFactory {
+  "Guess" should {
+    "reject guess code that is shorter than the secret code" in {
+      val secretCode = stub[Code]
+      val guessCode = stub[Code]
+
+      (secretCode.length _).when() returns 4
+      (guessCode.length _).when() returns 3
+
+      assertThrows[IncompatibleCodeLengthException] {
+        new Guess(secretCode, guessCode)
+      }
+    }
+
+    "reject guess code that is longer than the secret code" in {
+      val secretCode = stub[Code]
+      val guessCode = stub[Code]
+
+      (secretCode.length _).when() returns 4
+      (guessCode.length _).when() returns 5
+
+      assertThrows[IncompatibleCodeLengthException] {
+        new Guess(secretCode, guessCode)
+      }
+    }
+  }
+
   "exactHits" should {
     "return exact hits for secret and guess codes" in {
       val secretCode = stub[Code]

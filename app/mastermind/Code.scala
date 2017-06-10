@@ -29,6 +29,8 @@ case class Code(val pegs: List[CodePeg.Value]) {
     exactHitPegs(code).length
   }
 
+  def length: Int = pegs.length
+
   private def exactHitPegs(code: Code): List[CodePeg.Value] = {
     pegs.zip(code.pegs).filter(pegTuple => pegTuple._1 == pegTuple._2).map(_._1)
   }
