@@ -6,3 +6,4 @@
 # An example controller showing a sample home page
 GET     /                           controllers.GameController.index
 POST    /games                      controllers.GameController.startGame
+GET     /games/:gameUuid            controllers.GameController.getGame(gameUuid: String)

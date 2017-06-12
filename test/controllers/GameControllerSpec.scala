@@ -8,7 +8,7 @@ import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.JsString
+import play.api.libs.json._
 import play.api.mvc.Result
 import play.api.test.Helpers._
 import play.api.test._
@@ -44,6 +44,16 @@ class GameControllerSpec extends PlaySpec with GuiceOneAppPerTest {
 
       status(startGame) mustBe CREATED
       header("Location", startGame).getOrElse("") must fullyMatch regex """/games/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"""
+    }
+
+    "load an existing game" in {
+      val gameResource = header("Location", post("/games")).get
+      val uuid = gameResource.replace("/games/", "")
+      val game = get(gameResource)
+
+      status(game) mustBe OK
+      contentType(game) mustBe Some("application/json")
+      (contentAsJson(game) \ "uuid").get mustBe JsString(uuid)
     }
   }
 }
