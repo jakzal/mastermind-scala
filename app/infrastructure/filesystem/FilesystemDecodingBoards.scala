@@ -1,6 +1,7 @@
 package infrastructure.filesystem
 
 import java.io.{File, IOException}
+import javax.inject.{Inject, Named}
 
 import mastermind._
 import mastermind.exceptions.DecodingBoardNotFoundException
@@ -9,7 +10,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 
-class FilesystemDecodingBoards (dir: File) extends DecodingBoards {
+class FilesystemDecodingBoards @Inject()(@Named("decodingBoardsDir") dir: File) extends DecodingBoards {
 
   override def load(gameUuid: GameUuid) = {
     try {
