@@ -7,3 +7,4 @@
 GET     /                           controllers.GameController.index
 POST    /games                      controllers.GameController.startGame
 GET     /games/:gameUuid            controllers.GameController.getGame(gameUuid: String)
+PUT     /games/:gameUuid            controllers.GameController.playGame(gameUuid: String)

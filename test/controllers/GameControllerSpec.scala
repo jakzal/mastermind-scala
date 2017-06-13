@@ -27,7 +27,10 @@ class GameControllerSpec extends PlaySpec with GuiceOneAppPerTest {
       .build()
 
   def get(path: String): Future[Result] = route(app, FakeRequest(GET, path).withHeaders("Host" -> "localhost")).get
+
   def post(path: String): Future[Result] = route(app, FakeRequest(POST, path).withHeaders("Host" -> "localhost")).get
+
+  def put(path: String, body: String): Future[Result] = route(app, FakeRequest(PUT, path).withJsonBody(Json.parse(body)).withHeaders("Host" -> "localhost")).get
 
   "GameController GET" should {
 
@@ -54,6 +57,20 @@ class GameControllerSpec extends PlaySpec with GuiceOneAppPerTest {
       status(game) mustBe OK
       contentType(game) mustBe Some("application/json")
       (contentAsJson(game) \ "uuid").get mustBe JsString(uuid)
+    }
+
+    "make a guess attempt" in {
+      val gameResource = header("Location", post("/games")).get
+      val uuid = gameResource.replace("/games/", "")
+      val playGame = put(gameResource, """{"guess":["Red", "Green", "Blue", "Purple"]}""")
+
+      status(playGame) mustBe CREATED
+
+      val game = get(gameResource)
+      status(game) mustBe OK
+      contentType(game) mustBe Some("application/json")
+      (contentAsJson(game) \ "uuid").get mustBe JsString(uuid)
+      (contentAsJson(game) \ "guesses") (0).as[List[String]] mustBe (List("Red", "Green", "Blue", "Purple"))
     }
   }
 }

@@ -8,7 +8,7 @@ import play.api.libs.json._
 import play.api.mvc._
 
 @Singleton
-class GameController @Inject() (game: Game, serializer: DecodingBoardSerializer) extends Controller {
+class GameController @Inject()(game: Game, serializer: DecodingBoardSerializer) extends Controller {
   def index = Action { implicit request =>
     Ok(Json.toJson(Map("message" -> "Welcome to Play")))
   }
@@ -23,5 +23,11 @@ class GameController @Inject() (game: Game, serializer: DecodingBoardSerializer)
     val board = game.load(GameUuid(gameUuid))
 
     Ok(serializer.decodingBoardToJson(board))
+  }
+
+  def playGame(gameUuid: String) = Action(BodyParsers.parse.json) { implicit request =>
+    game.tryCode(GameUuid(gameUuid), serializer.jsonToGuessCode(request.body))
+
+    Status(CREATED)
   }
 }

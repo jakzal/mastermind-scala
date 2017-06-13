@@ -1,9 +1,11 @@
 package infrastructure.http
 
-import mastermind.{Code, DecodingBoard, GameUuid, Guess}
+import infrastructure.http.exceptions.InvalidGuessCodeException
+import mastermind._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{Matchers, WordSpec}
+import play.api.libs.json.Json
 
 @RunWith(classOf[JUnitRunner])
 class DecodingBoardSerializerSpec extends WordSpec with Matchers {
@@ -17,9 +19,25 @@ class DecodingBoardSerializerSpec extends WordSpec with Matchers {
 
       val json = new DecodingBoardSerializer().decodingBoardToJson(board)
 
-      (json \ "uuid").as[String] should be (gameUuid.toString)
-      (json \ "attempts").as[Int] should be (12)
-      (json \ "guesses")(0).as[List[String]] should be (List("Blue", "Purple", "Blue", "Purple"))
+      (json \ "uuid").as[String] should be(gameUuid.toString)
+      (json \ "attempts").as[Int] should be(12)
+      (json \ "guesses") (0).as[List[String]] should be(List("Blue", "Purple", "Blue", "Purple"))
+    }
+
+    "deserialize a json value to code" in {
+      val json = Json.parse("""{"guess":["Red", "Green", "Blue", "Yellow"]}""")
+
+      val code = new DecodingBoardSerializer().jsonToGuessCode(json)
+
+      code.pegs should be(List(CodePeg.Red, CodePeg.Green, CodePeg.Blue, CodePeg.Yellow))
+    }
+
+    "throw an exception if code cannot be parsed" in {
+      val json = Json.parse("""{"guess":"Red"}""")
+
+      assertThrows[InvalidGuessCodeException] {
+        new DecodingBoardSerializer().jsonToGuessCode(json)
+      }
     }
   }
 }
