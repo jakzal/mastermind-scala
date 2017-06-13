@@ -16,7 +16,7 @@ class GameController @Inject()(game: Game, serializer: DecodingBoardSerializer) 
   def startGame = Action { implicit request =>
     val gameUuid = game.start(RandomCodeMaker(4), 12)
 
-    Status(201).withHeaders("Location" -> (routes.GameController.getGame(gameUuid.toString).url))
+    Status(CREATED).withHeaders("Location" -> (routes.GameController.getGame(gameUuid.toString).url))
   }
 
   def getGame(gameUuid: String) = Action { implicit request =>
@@ -28,6 +28,6 @@ class GameController @Inject()(game: Game, serializer: DecodingBoardSerializer) 
   def playGame(gameUuid: String) = Action(BodyParsers.parse.json) { implicit request =>
     game.tryCode(GameUuid(gameUuid), serializer.jsonToGuessCode(request.body))
 
-    Status(CREATED)
+    Status(CREATED).withHeaders("Location" -> (routes.GameController.getGame(gameUuid.toString).url))
   }
 }

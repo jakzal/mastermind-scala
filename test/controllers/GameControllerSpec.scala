@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule
 import infrastructure.test.InMemoryDecodingBoards
 import mastermind.DecodingBoards
 import org.scalatest.TestData
+import org.scalatest.matchers.Matcher
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.Application
@@ -46,7 +47,7 @@ class GameControllerSpec extends PlaySpec with GuiceOneAppPerTest {
       val startGame = post("/games")
 
       status(startGame) mustBe CREATED
-      header("Location", startGame).getOrElse("") must fullyMatch regex """/games/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"""
+      header("Location", startGame).getOrElse("") must beGameResource
     }
 
     "load an existing game" in {
@@ -65,6 +66,7 @@ class GameControllerSpec extends PlaySpec with GuiceOneAppPerTest {
       val playGame = put(gameResource, """{"guess":["Red", "Green", "Blue", "Purple"]}""")
 
       status(playGame) mustBe CREATED
+      header("Location", playGame).getOrElse("") must beGameResource
 
       val game = get(gameResource)
       status(game) mustBe OK
@@ -72,5 +74,9 @@ class GameControllerSpec extends PlaySpec with GuiceOneAppPerTest {
       (contentAsJson(game) \ "uuid").get mustBe JsString(uuid)
       (contentAsJson(game) \ "guesses") (0).as[List[String]] mustBe (List("Red", "Green", "Blue", "Purple"))
     }
+  }
+
+  def beGameResource(): Matcher[String] = {
+    fullyMatch regex """/games/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"""
   }
 }
