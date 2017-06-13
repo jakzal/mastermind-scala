@@ -2,12 +2,32 @@ package controllers
 
 import javax.inject._
 
-import play.api.libs.json.Json
+import infrastructure.http.DecodingBoardSerializer
+import mastermind._
+import play.api.libs.json._
 import play.api.mvc._
 
 @Singleton
-class GameController @Inject() extends Controller {
+class GameController @Inject()(game: Game, serializer: DecodingBoardSerializer) extends Controller {
   def index = Action { implicit request =>
     Ok(Json.toJson(Map("message" -> "Welcome to Play")))
+  }
+
+  def startGame = Action { implicit request =>
+    val gameUuid = game.start(RandomCodeMaker(4), 12)
+
+    Status(CREATED).withHeaders("Location" -> (routes.GameController.getGame(gameUuid.toString).url))
+  }
+
+  def getGame(gameUuid: String) = Action { implicit request =>
+    val board = game.load(GameUuid(gameUuid))
+
+    Ok(serializer.decodingBoardToJson(board))
+  }
+
+  def playGame(gameUuid: String) = Action(BodyParsers.parse.json) { implicit request =>
+    game.tryCode(GameUuid(gameUuid), serializer.jsonToGuessCode(request.body))
+
+    Status(CREATED).withHeaders("Location" -> (routes.GameController.getGame(gameUuid.toString).url))
   }
 }

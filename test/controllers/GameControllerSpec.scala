@@ -1,16 +1,37 @@
 package controllers
 
+import com.google.inject.AbstractModule
+import infrastructure.test.InMemoryDecodingBoards
+import mastermind.DecodingBoards
+import org.scalatest.TestData
+import org.scalatest.matchers.Matcher
 import org.scalatestplus.play._
-import play.api.libs.json.JsString
+import org.scalatestplus.play.guice.GuiceOneAppPerTest
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json._
 import play.api.mvc.Result
 import play.api.test.Helpers._
 import play.api.test._
 
 import scala.concurrent.Future
 
-class GameControllerSpec extends PlaySpec with OneAppPerTest {
+class GameControllerSpec extends PlaySpec with GuiceOneAppPerTest {
+
+  implicit override def newAppForTest(testData: TestData): Application =
+    new GuiceApplicationBuilder()
+      .overrides(
+        new AbstractModule {
+          override def configure(): Unit = bind(classOf[DecodingBoards]).to(classOf[InMemoryDecodingBoards])
+        }
+      )
+      .build()
 
   def get(path: String): Future[Result] = route(app, FakeRequest(GET, path).withHeaders("Host" -> "localhost")).get
+
+  def post(path: String): Future[Result] = route(app, FakeRequest(POST, path).withHeaders("Host" -> "localhost")).get
+
+  def put(path: String, body: String): Future[Result] = route(app, FakeRequest(PUT, path).withJsonBody(Json.parse(body)).withHeaders("Host" -> "localhost")).get
 
   "GameController GET" should {
 
@@ -21,5 +42,41 @@ class GameControllerSpec extends PlaySpec with OneAppPerTest {
       contentType(index) mustBe Some("application/json")
       (contentAsJson(index) \ "message").get mustBe JsString("Welcome to Play")
     }
+
+    "start a new game" in {
+      val startGame = post("/games")
+
+      status(startGame) mustBe CREATED
+      header("Location", startGame).getOrElse("") must beGameResource
+    }
+
+    "load an existing game" in {
+      val gameResource = header("Location", post("/games")).get
+      val uuid = gameResource.replace("/games/", "")
+      val game = get(gameResource)
+
+      status(game) mustBe OK
+      contentType(game) mustBe Some("application/json")
+      (contentAsJson(game) \ "uuid").get mustBe JsString(uuid)
+    }
+
+    "make a guess attempt" in {
+      val gameResource = header("Location", post("/games")).get
+      val uuid = gameResource.replace("/games/", "")
+      val playGame = put(gameResource, """{"guess":["Red", "Green", "Blue", "Purple"]}""")
+
+      status(playGame) mustBe CREATED
+      header("Location", playGame).getOrElse("") must beGameResource
+
+      val game = get(gameResource)
+      status(game) mustBe OK
+      contentType(game) mustBe Some("application/json")
+      (contentAsJson(game) \ "uuid").get mustBe JsString(uuid)
+      (contentAsJson(game) \ "guesses") (0).as[List[String]] mustBe (List("Red", "Green", "Blue", "Purple"))
+    }
+  }
+
+  def beGameResource(): Matcher[String] = {
+    fullyMatch regex """/games/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"""
   }
 }
